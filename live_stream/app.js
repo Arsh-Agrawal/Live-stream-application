@@ -27,15 +27,29 @@ app.get('/:rooom', (req, res) => {
 
 
 //sockets
-
+let users = {};
 io.on('connection', socket => {
-    socket.on('join room', (roomId, userId) => {
+    socket.on('join-room', (roomId, userId) => {
+
+        // console.log('here');
+        // if( (socket in users) ){
+        //     users[socket]++;
+        // }
+        // else{
+        //     users[socket] = 1;
+        // }
         socket.join(roomId);
-        socket.to(roomId).broadcast('user-connected', userId);
+        socket.to(roomId).broadcast.emit('user-connected', userId);
 
         socket.on('disconnect', () => {
-            socket.to(roomId).broadcast.emit('user disconnected', userID);
+            socket.to(roomId).broadcast.emit('user-disconnected', userId);
+            // users[socket]--;
+            // if(users[socket] <= 0){
+            //     delete users[socket];
+            // }
         })
+
+        // console.log('users on '+socket +' = '+ users[socket]);
     });
 })
 
