@@ -17,8 +17,12 @@
   },
   "homepage": "https://github.com/Arsh-Agrawal/Vaiyu#readme",
   "dependencies": {
+    "ejs": "^3.1.3",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "nodemon": "^2.0.6",
-    "socket.io": "^2.3.0"
+    "peer": "^0.5.3",
+    "socket.io": "^2.3.0",
+    "uuid": "^8.3.1"
   }
 }
