@@ -1,0 +1,24 @@
+{
+  "name": "vaiyu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Arsh-Agrawal/Vaiyu.git"
+  },
+  "author": "Arsh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Arsh-Agrawal/Vaiyu/issues"
+  },
+  "homepage": "https://github.com/Arsh-Agrawal/Vaiyu#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.6",
+    "socket.io": "^2.3.0"
+  }
+}
