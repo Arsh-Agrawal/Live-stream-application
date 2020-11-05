@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>chat</title>
+   </head>
+   
+   <script src = "/socket.io/socket.io.js"></script>
+   <script src="script.js" defer></script>
+   <body>
+      <div id = "error"></div>
+      <input id = "name" type = "text" name = "name" value = "" 
+         placeholder = "Enter your name!">
+      <button type = "button" name = "button" onclick = "setUsername()" >
+         connect
+      </button>
+   </body>
+</html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <script>
+    const ROOM_ID = ""
+  </script>
+
+  <script src="/socket.io/socket.io.js" defer></script>
+  <script src="script.js" defer></script>
+  
+  <title>Chat</title>
+</head>
+<body>
+
+  <input id = "message" type = "text" name = "name" value = "" 
+     placeholder = "Enter somethig">
+  <button type = "send" name = "button" onclick = "sendMessage()">
+      send
+  </button>
+  <h4>your message</h4>
+  <div id = "chat"></div>
+</body>
+</html> -->
