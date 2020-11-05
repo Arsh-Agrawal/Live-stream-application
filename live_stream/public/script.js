@@ -9,30 +9,39 @@ const myPeer = new Peer(undefined, {
 //user is the new user and my refers to yourself
 
 //not to access everyones cam only the ones who joined
-const myVideo = document.createElement('video')
-myVideo.muted = true
-const peers = {}
-navigator.mediaDevices.getUserMedia({
-  video: true,
-  audio: true
-}).then(stream => {
-  addVideoStream(myVideo, stream)
+const peers = {};
 
-  myPeer.on('call', call => {
-    call.answer(stream)
-    const video = document.createElement('video')
-    call.on('stream', userVideoStream => {
-      addVideoStream(video, userVideoStream)
+console.log('trainer = ' + TRAINER);
+
+if (TRAINER == "1") {
+  console.log('in trainer');
+  const myVideo = document.createElement('video')
+  myVideo.muted = true
+  navigator.mediaDevices.getUserMedia({
+    video: true,
+    audio: true
+  }).then(stream => {
+    addVideoStream(myVideo, stream)
+
+
+    socket.on('user-connected', userId => {
+      sendTrainerStream(userId, stream)
     })
   })
+}
+else {
+  console.log('not in trainer');
+  const userVideo = document.createElement('video');
+  userVideo.muted = true;
+  acceptStream(userVideo);
+}
 
-  socket.on('user-connected', userId => {
-    connectToNewUser(userId, stream)
-  })
-})
 
 socket.on('user-disconnected', userId => {
-  if (peers[userId]) peers[userId].close()
+  if (peers[userId]) {
+    peers[userId].close();
+    delete peers[userId];
+  }
 })
 
 myPeer.on('open', id => {
@@ -41,17 +50,8 @@ myPeer.on('open', id => {
 
 
 //code change required
-function connectToNewUser(userId, stream) {
-  const call = myPeer.call(userId, stream) //sending our audio and video stream
-
-  //user send back their video stream
-  const video = document.createElement('video')
-  call.on('stream', userVideoStream => {
-    addVideoStream(video, userVideoStream)
-  })
-  call.on('close', () => {
-    video.remove()
-  })
+function sendTrainerStream(userId, stream) {
+  const call = myPeer.call(userId, stream) //sending our A/V stream to user
 
   peers[userId] = call
 }
@@ -62,4 +62,13 @@ function addVideoStream(video, stream) {
     video.play()
   })
   videoGrid.append(video)
+}
+
+function acceptStream(video) {
+  myPeer.on('call', call => {
+    call.answer();
+    call.on('stream',stream =>{
+      addVideoStream(video, stream);
+    })
+  })
 }

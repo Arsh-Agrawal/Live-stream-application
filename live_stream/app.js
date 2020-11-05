@@ -8,48 +8,60 @@ const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const { v4: uuidv4 } = require('uuid');
 
-
+app.use(ignoreFavicon);
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 
 //routes for streaming
+const num_users = {}
 
 app.get('/', (req, res) => {
     let roomId = uuidv4();
-    res.redirect(`/${roomId}`)
+    return res.redirect(`/${roomId}`);
 });
 
-app.get('/:rooom', (req, res) => {
-    res.render('room', { roomId: req.params.room })
+app.get('/:room', (req, res) => {
+
+    let roomId = req.params.room;
+
+    if( (roomId in num_users) ){
+        return res.render('room', { roomId: req.params.room, userCreatedRoom: '0'})
+    }
+    else{
+        return res.render('room', { roomId: req.params.room, userCreatedRoom: '1'})
+    }
+    
 });
 
 
 //sockets
-let users = {};
+
+//bug to resolve
+    //if the creater of the room leaves then the streaming needs to be closed
+    //need to be tested
+
 io.on('connection', socket => {
     socket.on('join-room', (roomId, userId) => {
-
-        // console.log('here');
-        // if( (socket in users) ){
-        //     users[socket]++;
-        // }
-        // else{
-        //     users[socket] = 1;
-        // }
+        
+        if(!(roomId in num_users)){
+            num_users[roomId] = 1;
+        }
+        else{
+            num_users[roomId]++;
+        }
         socket.join(roomId);
         socket.to(roomId).broadcast.emit('user-connected', userId);
 
         socket.on('disconnect', () => {
+            num_users[roomId]--;
+            if(num_users[roomId] == 0){
+                delete num_users[roomId];
+            }
             socket.to(roomId).broadcast.emit('user-disconnected', userId);
-            // users[socket]--;
-            // if(users[socket] <= 0){
-            //     delete users[socket];
-            // }
         })
 
-        // console.log('users on '+socket +' = '+ users[socket]);
     });
 })
 
@@ -59,3 +71,11 @@ const port = process.env.PORT || 3000;
 server.listen(port, err => {
     console.log(err || "listening on port " + port);
 });
+
+function ignoreFavicon(req, res, next) {
+    if (req.originalUrl && req.originalUrl.split("/").pop() === 'favicon.ico') {
+        return res.sendStatus(204);
+    }
+    
+    return next();
+}
