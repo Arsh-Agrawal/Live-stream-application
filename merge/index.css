@@ -33,13 +33,11 @@ body {
 }
 
 ul{
-    border: 1px solid green;
     overflow: scroll;
     height: 84vh;
     width: 20vw;
     margin: 0px;
     box-sizing: border-box;
-    /* padding: 0px; */
 }
 li{
     list-style-type: none;
