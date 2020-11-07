@@ -7,6 +7,7 @@ const path = require('path'),
 
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
+app.use(ignoreFavicon);
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 
@@ -58,9 +59,15 @@ io.on('connection', function(socket) {
 // })
 
 
-
-
 const port = process.env.PORT || 3030
 server.listen(port, err => {
     console.log(err || "listening on port: " + port);
 });
+
+function ignoreFavicon(req, res, next) {
+   if (req.originalUrl && req.originalUrl.split("/").pop() === 'favicon.ico') {
+       return res.sendStatus(204);
+   }
+   
+   return next();
+}
