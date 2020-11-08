@@ -32,14 +32,14 @@ body {
     margin: 0px
 }
 
-ul{
+.message-container{
     overflow: scroll;
     height: 84vh;
     width: 20vw;
     margin: 0px;
     box-sizing: border-box;
 }
-li{
+.message-container > div{
     list-style-type: none;
 }
 

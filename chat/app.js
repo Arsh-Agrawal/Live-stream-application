@@ -6,63 +6,84 @@ const path = require('path'),
       {v4: uuidv4} = require('uuid');
 
 require('dotenv').config({ path: path.join(__dirname, '.env') });
-
 app.use(ignoreFavicon);
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
+app.set("view engine", 'ejs');
+app.use(express.urlencoded({ extended: true }))
 
-
+const rooms = { }
 
 app.get('/', (req, res) => {
-    let roomId = uuidv4();
-    res.redirect(`/${roomId}`)
+   res.render ('index')
 });
 
-app.get("/:room", (req, res) => {
-    res.render('../views/room.ejs');
-});
+// **************************
+//        ALL ROUTS
+// **************************
+app.post('/room', (req, res) => {
 
-users = [];
-
-io.on('connection', function(socket) {
-   console.log('A user connected');
-   socket.on('setUsername', function(data) {
-      console.log(data);
-      
-      if(users.indexOf(data) > -1) {
-         socket.emit('userExists', data + ' username is taken! Try some other username.');
-      } else {
-         users.push(data);
-         socket.emit('userSet', {username: data});
-      }
-   });
+   //check for roomId in params to join else make new roomID
+   let roomId = req.body.roomId ? req.body.roomId : uuidv4();
    
-   socket.on('msg', function(data) {
-      //Send message to everyone
-      io.sockets.emit('newmsg', data);
+   //check if the new room ID already exist
+   if(req.body.roomId){
+      res.redirect(roomId)
+   } else {
+      if(rooms[roomId] != null){
+         console.log("room already exists!!");
+         return res.redirect('/')
+      }
+      //making a new room haveing empty users object
+      rooms[roomId] = { users: {} }
+
+      res.redirect(roomId)
+   }
+})
+
+app.get("/:roomId", (req, res) => {
+
+   //check if the room exists
+   if(rooms[req.params.roomId] == null){
+      console.log("room does not exist!!");
+      return res.redirect('/')
+   }
+
+   res.render('room', {roomId: req.params.roomId})
+});
+
+
+// **************************
+//   ALL SOCKET CONNECTION 
+// **************************
+io.on('connection', socket => {
+   socket.on('new-user', (room, name) => {
+     socket.join(room)
+     rooms[room].users[socket.id] = name
+     socket.to(room).broadcast.emit('user-connected', name)
    })
-});
+   socket.on('send-chat-message', (room, message) => {
+     socket.to(room).broadcast.emit('chat-message', { message: message, name: rooms[room].users[socket.id] })
+   })
+   socket.on('disconnect', () => {
+     getUserRooms(socket).forEach(room => {
+       socket.to(room).broadcast.emit('user-disconnected', rooms[room].users[socket.id])
+       delete rooms[room].users[socket.id]
+     })
+   })
+ })
+ 
 
-// io.on('connection', socket => {
-//     console.log("user connected");
-//     socket.on('join-room', (roomId, userId) => {
-//         socket.join(roomId);
-//         socket.to(roomId).broadcast.emit("User-connected", userId);
-
-//         socket.on("disconnect", () => {
-//             socket.to(roomId).broadcast.emit("user-disconnected", userId);
-//             console.log("A user disconnected");
-//         })
-
-
-//     });
-// })
-
-
-const port = process.env.PORT || 3030
-server.listen(port, err => {
-    console.log(err || "listening on port: " + port);
-});
+// **************************
+//         FUNCTIONS 
+// **************************
+const getUserRooms = (socket) => {
+   // check all the room where the user is part of 
+   return Object.entries(rooms).reduce((names, [name, room]) => {
+      if(room.users[socket.id] != null) names.push(name)
+      return names
+   }, [])
+}
 
 function ignoreFavicon(req, res, next) {
    if (req.originalUrl && req.originalUrl.split("/").pop() === 'favicon.ico') {
@@ -71,3 +92,12 @@ function ignoreFavicon(req, res, next) {
    
    return next();
 }
+
+
+// **************************
+//        NODE SERVER 
+// **************************
+const port = process.env.PORT || 3030
+server.listen(port, err => {
+    console.log(err || "listening on port: " + port);
+});

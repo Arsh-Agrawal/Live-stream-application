@@ -1,45 +1,53 @@
 <!DOCTYPE html>
-<html>
-   <head>
-      <title>chat</title>
-   </head>
-   
-   <script src = "/socket.io/socket.io.js"></script>
-   <script src="script.js" defer></script>
-   <body>
-      <div id = "error"></div>
-      <input id = "name" type = "text" name = "name" value = "" 
-         placeholder = "Enter your name!">
-      <button type = "button" name = "button" onclick = "setUsername()" >
-         connect
-      </button>
-   </body>
-</html>
-
-<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
+  <title>Chat App</title>
   <script>
-    const ROOM_ID = ""
+    const roomId = "<%= roomId %>"
   </script>
+  <script defer src="http://localhost:3030/socket.io/socket.io.js"></script>
+  <script defer src="script.js"></script>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+    }
 
-  <script src="/socket.io/socket.io.js" defer></script>
-  <script src="script.js" defer></script>
-  
-  <title>Chat</title>
+    #message-container {
+      width: 80%;
+      max-width: 1200px;
+    }
+
+    #message-container div {
+      background-color: #CCC;
+      padding: 5px;
+    }
+
+    #send-container {
+      position: fixed;
+      padding-bottom: 30px;
+      bottom: 0;
+      background-color: white;
+      max-width: 1200px;
+      width: 80%;
+      display: flex;
+    }
+
+    #message-input {
+      flex-grow: 1;
+    }
+  </style>
 </head>
 <body>
-
-  <input id = "message" type = "text" name = "name" value = "" 
-     placeholder = "Enter somethig">
-  <button type = "send" name = "button" onclick = "sendMessage()">
-      send
-  </button>
-  <h4>your message</h4>
-  <div id = "chat"></div>
+  <div id="message-container"></div>
+  <form id="send-container">
+    <input type="text" id="message-input">
+    <button type="submit" id="send-button">Send</button>
+  </form>
 </body>
-</html> -->
+</html>
