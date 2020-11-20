@@ -1,0 +1,49 @@
+body {
+    height: 100%;
+    overflow-y: hidden;
+    margin-top: 25px;
+ }
+
+.stream__body{
+    display: flex;
+    justify-content: baseline;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    height: 700px;
+}
+
+.video-grid{
+    margin-left: 10px;
+    flex: 0.8;
+    border: 1px solid red;
+    height: 700px;
+    padding: 5px;
+}
+
+.chat__body{
+    width: 100%;
+    flex: 0.2;
+    border: 1px solid red;
+    margin-right: 10px;
+    padding: 5px;
+    height: 700px;
+    display: flex;
+    margin: 0px
+}
+
+.message-container{
+    overflow: scroll;
+    height: 84vh;
+    width: 20vw;
+    margin: 0px;
+    box-sizing: border-box;
+}
+.message-container > div{
+    list-style-type: none;
+}
+
+input{
+    width: 19vw;
+    height: 3vh;
+}

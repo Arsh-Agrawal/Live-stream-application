@@ -19,6 +19,7 @@ app.set("view engine", 'ejs');
 app.use(express.urlencoded({ extended: true }))
 
 
+
 app.get('/', (req, res) => {
     let roomId = uuidv4();
     return res.redirect(`/${roomId}`);
@@ -29,6 +30,7 @@ app.get('/', (req, res) => {
 
     num_users = axios.get('localhost:3000/users'); //need to check what it returns
     console.log(num_users);
+
 
     if( (roomId in num_users) ){
         return res.render('room', { roomId: roomId, userCreatedRoom: '0'})
@@ -52,7 +54,13 @@ app.get('/', (req, res) => {
     //     console.log(err);
     // })
 
- })
+});
+
+ const port = process.env.PORT || 4000;
+
+server.listen(port, err => {
+    console.log(err || "listening on port " + port);
+});
 
 
 
