@@ -6,35 +6,17 @@ const app = express();
 
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
-const { v4: uuidv4 } = require('uuid');
+const routes = require('./routes');
+
 
 app.use(ignoreFavicon);
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.user('/',routes);
 
 
-//routes for streaming
-const num_users = {}
-
-app.get('/', (req, res) => {
-    let roomId = uuidv4();
-    return res.redirect(`/${roomId}`);
-});
-
-app.get('/:room', (req, res) => {
-
-    let roomId = req.params.room;
-
-    if( (roomId in num_users) ){
-        return res.render('room', { roomId: req.params.room, userCreatedRoom: '0'})
-    }
-    else{
-        return res.render('room', { roomId: req.params.room, userCreatedRoom: '1'})
-    }
-    
-});
-
+const num_users = {};
 
 //sockets
 
@@ -43,8 +25,9 @@ app.get('/:room', (req, res) => {
     //need to be tested
 
 io.on('connection', socket => {
+    console.log('connected');
     socket.on('join-room', (roomId, userId) => {
-        
+        console.log('joined');
         if(!(roomId in num_users)){
             num_users[roomId] = 1;
         }
@@ -66,11 +49,16 @@ io.on('connection', socket => {
 })
 
 
+//server
+
 const port = process.env.PORT || 3000;
 
 server.listen(port, err => {
     console.log(err || "listening on port " + port);
 });
+
+
+//middleware functions
 
 function ignoreFavicon(req, res, next) {
     if (req.originalUrl && req.originalUrl.split("/").pop() === 'favicon.ico') {
