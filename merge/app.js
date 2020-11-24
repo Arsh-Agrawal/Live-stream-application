@@ -6,9 +6,7 @@ const app = express();
 const axios = require('axios');
 
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
 const { v4: uuidv4 } = require('uuid');
-const { promises } = require('fs');
 
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
@@ -28,31 +26,20 @@ app.get('/', (req, res) => {
  app.get('/:room',(req,res) => {
     let roomId = req.params.room;
 
-    num_users = axios.get('localhost:3000/users'); //need to check what it returns
-    console.log(num_users);
+    axios.get('localhost:3000/users')
+        .then(num_users =>{
+            console.log(num_users);
 
-
-    if( (roomId in num_users) ){
-        return res.render('room', { roomId: roomId, userCreatedRoom: '0'})
-    }
-    else{
-        return res.render('room', { roomId: roomId, userCreatedRoom: '1'})
-    }
-
-    // Promise.all(getUsers())
-    // .then(result =>{
-    //     num_users = result[0];
-
-    //     if( (roomId in num_users) ){
-    //         return res.render('room', { roomId: req.params.room, userCreatedRoom: '0'})
-    //     }
-    //     else{
-    //         return res.render('room', { roomId: req.params.room, userCreatedRoom: '1'})
-    //     }
-
-    // }).catch(err =>{
-    //     console.log(err);
-    // })
+            if( (roomId in num_users) ){
+                return res.render('room', { roomId: roomId, userCreatedRoom: '0'})
+            }
+            else{
+                return res.render('room', { roomId: roomId, userCreatedRoom: '1'})
+            }
+        })
+        .catch(err =>{
+            console.log(err);
+        });
 
 });
 

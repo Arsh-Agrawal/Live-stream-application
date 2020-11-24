@@ -11,6 +11,7 @@ router.get('/', (req, res) => {
  
     //check for roomId in params to join else make new roomID
     let roomId = req.body.roomId ? req.body.roomId : uuidv4();
+    let rooms = global.rooms;
     
     //check if the new room ID already exist
     if(req.body.roomId){
@@ -30,6 +31,7 @@ router.get('/', (req, res) => {
  router.get("/:roomId", (req, res) => {
  
     //check if the room exists
+    let rooms = global.rooms;
     if(rooms[req.params.roomId] == null){
        console.log("room does not exist!!");
        return res.redirect('/')

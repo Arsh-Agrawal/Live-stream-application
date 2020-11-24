@@ -13,10 +13,11 @@ app.use(ignoreFavicon);
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.user('/',routes);
+app.use('/',routes);
 
 
-const num_users = {};
+global.num_users = {};
+// global.num_users["arsh"] = 5;
 
 //sockets
 
@@ -28,24 +29,26 @@ io.on('connection', socket => {
     console.log('connected');
     socket.on('join-room', (roomId, userId) => {
         console.log('joined');
-        if(!(roomId in num_users)){
-            num_users[roomId] = 1;
+        // console.log(roomId+" "+ userId);
+        if(!(roomId in global.num_users)){
+            global.num_users[roomId] = 1;
         }
         else{
-            num_users[roomId]++;
+            global.num_users[roomId]++;
         }
         socket.join(roomId);
         socket.to(roomId).broadcast.emit('user-connected', userId);
 
         socket.on('disconnect', () => {
-            num_users[roomId]--;
-            if(num_users[roomId] == 0){
-                delete num_users[roomId];
+            global.num_users[roomId]--;
+            if(global.num_users[roomId] == 0){
+                delete global.num_users[roomId];
             }
             socket.to(roomId).broadcast.emit('user-disconnected', userId);
-        })
+        });
 
     });
+
 })
 
 

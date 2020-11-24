@@ -4,7 +4,7 @@ body {
     margin-top: 25px;
  }
 
-.stream__body{
+.stream_body{
     display: flex;
     justify-content: baseline;
     top: 0;
@@ -13,7 +13,7 @@ body {
     height: 700px;
 }
 
-.video-grid{
+.video_grid{
     margin-left: 10px;
     flex: 0.8;
     border: 1px solid red;
@@ -21,7 +21,7 @@ body {
     padding: 5px;
 }
 
-.chat__body{
+.chat_body{
     width: 100%;
     flex: 0.2;
     border: 1px solid red;

@@ -1,8 +1,8 @@
 // const url = 'localhost:3000/'+ROOM_ID;
 // console.log(url);
 
-const socket = io('/localhost:3000');
-const videoGrid = document.getElementById('video-grid')
+const socket = io('localhost:3000');
+const videoGrid = document.getElementById('video-grid');
 const myPeer = new Peer(undefined, {
   host: '/',
   port: '3001'
@@ -15,6 +15,7 @@ const myPeer = new Peer(undefined, {
 const peers = {};
 
 console.log('trainer = ' + TRAINER);
+// console.log(ROOM_ID);
 
 if (TRAINER == "1") {
   console.log('in trainer');
@@ -50,8 +51,8 @@ socket.on('user-disconnected', userId => {
   }
 })
 
-myPeer.on('open', id => {
-  socket.emit('join-room', ROOM_ID, id)
+myPeer.on('open', userId => {
+  socket.emit('join-room', ROOM_ID, userId);
 })
 
 

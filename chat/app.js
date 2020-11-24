@@ -11,9 +11,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'views'));
 app.set("view engine", 'ejs');
 app.use(express.urlencoded({ extended: true }));
-app.user('/',routes);
+app.use('/',routes);
 
-const rooms = { }
+
+
+global.rooms = {};
 
 
 //sockets
@@ -21,15 +23,15 @@ const rooms = { }
 io.on('connection', socket => {
    socket.on('new-user', (room, name) => {
      socket.join(room);
-     rooms[room].users[socket.id] = name;
+     global.rooms[room].users[socket.id] = name;
      socket.to(room).broadcast.emit('user-connected', name);
    })
    socket.on('send-chat-message', (room, message) => {
-     socket.to(room).broadcast.emit('chat-message', { message: message, name: rooms[room].users[socket.id] });
+     socket.to(room).broadcast.emit('chat-message', { message: message, name: global.rooms[room].users[socket.id] });
    })
    socket.on('disconnect', () => {
-      delete rooms[room].users[socket.id] ;
-      socket.to(room).broadcast.emit('user-disconnected', rooms[room].users[socket.id]) ;
+      delete global.rooms[room].users[socket.id] ;
+      socket.to(room).broadcast.emit('user-disconnected', global.rooms[room].users[socket.id]) ;
    })
 })
  
