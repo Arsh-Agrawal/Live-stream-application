@@ -3,6 +3,7 @@ require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
@@ -11,9 +12,12 @@ const routes = require('./routes');
 
 app.use(ignoreFavicon);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use('/',routes);
+
 
 
 global.num_users = {};

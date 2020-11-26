@@ -1,7 +1,7 @@
 // const url = 'localhost:3000/'+ROOM_ID;
 // console.log(url);
 
-const socket = io('/localhost:3000');
+const socket = io('localhost:3000');
 const videoGrid = document.getElementById('video-grid')
 const myPeer = new Peer(undefined, {
   host: '/',

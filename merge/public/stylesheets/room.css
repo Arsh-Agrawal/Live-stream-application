@@ -13,7 +13,7 @@ body {
     height: 700px;
 }
 
-.video_grid{
+.video-grid{
     margin-left: 10px;
     flex: 0.8;
     border: 1px solid red;

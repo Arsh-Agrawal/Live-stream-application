@@ -14,12 +14,15 @@ router.get('/', (req, res) => {
 router.get('/users',(req,res) =>{
     console.log("asked users");
     let num_users = global.num_users;
-    res.send(num_users);
-})
+    res.send({
+        "num_users" : num_users 
+    });
+});
 
 router.get('/:room', (req, res) => {
     let num_users = global.num_users;
     let roomId = req.params.room;
+    console.log('here');
 
     if( (roomId in num_users) ){
         return res.render('room', { roomId: roomId, userCreatedRoom: '0'})

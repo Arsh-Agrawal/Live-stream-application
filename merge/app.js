@@ -7,11 +7,14 @@ const axios = require('axios');
 
 const server = require('http').Server(app);
 const { v4: uuidv4 } = require('uuid');
+const bodyParser = require('body-parser');
 
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 app.use(ignoreFavicon);
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.set('views', path.join(__dirname, 'views'));
 app.set("view engine", 'ejs');
 app.use(express.urlencoded({ extended: true }))
@@ -19,26 +22,32 @@ app.use(express.urlencoded({ extended: true }))
 
 
 app.get('/', (req, res) => {
+    
     let roomId = uuidv4();
     return res.redirect(`/${roomId}`);
  });
 
  app.get('/:room',(req,res) => {
     let roomId = req.params.room;
+    // console.log(req.headers);
 
-    axios.get('localhost:3000/users')
-        .then(num_users =>{
-            console.log(num_users);
+    console.log('running axios');
+    axios.get('http://localhost:3000/users')
+        .then(result =>{
+            // console.log('here');
+            // console.log(result.data);
+            const num_users = result.data.num_users;
 
             if( (roomId in num_users) ){
-                return res.render('room', { roomId: roomId, userCreatedRoom: '0'})
+                return res.render('room', { roomId: roomId, userCreatedRoom: '0'});
             }
             else{
-                return res.render('room', { roomId: roomId, userCreatedRoom: '1'})
+                return res.render('room', { roomId: roomId, userCreatedRoom: '1'});
             }
         })
         .catch(err =>{
-            console.log(err);
+            // console.log(err);
+            console.log("not working");
         });
 
 });
