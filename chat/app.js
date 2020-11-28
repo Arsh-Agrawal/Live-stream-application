@@ -18,34 +18,40 @@ app.set("view engine", 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use('/',routes);
 
+global.num_users = {};
 
 
-global.rooms = {};
-const user_name = {};
-
-
-//sockets
-
+//ALL NEW
 io.on('connection', socket => {
-   socket.on('new-user', (room, name) => {
-     socket.join(room);
-     user_name[socket] = {name : name , room : room};
-     console.log(user_name[socket]);
-     socket.to(room).broadcast.emit('user-connected', name);
-   })
-   socket.on('send-chat-message', (room, message) => {
-     socket.to(room).broadcast.emit('chat-message', { message: message, name: user_name[socket] });
-   })
-   socket.on('disconnect', () => {
-      const roomID = user_name[socket].room;
-      delete user_name[socket];
+   console.log('connected');
+   socket.on('join-room', (room, name) => {
+      console.log('joined');
+      // console.log(roomId+" "+ userId);
+      if(!(room in global.num_users)){
+         global.num_users[room] = 1;
+      }
+      else{
+         global.num_users[room]++;
+      }
+      socket.join(room);
+      socket.to(room).broadcast.emit('user-connected', name);
 
-      socket.to(roomID).broadcast.emit('user-disconnected', user_name[socket]) ;
-   })
+      socket.on('send-chat-message', (room, message) => {
+         socket.to(room).broadcast.emit('chat-message', { message: message, name: name });
+
+         //  LEFT ---------------------------------------------
+         socket.on('disconnect', () => {
+            global.num_users[room]--;
+            if(global.num_users[room] == 0){
+               delete global.num_users[room];
+            }
+            socket.to(room).broadcast.emit('user-disconnected', name);
+         });
+      })   
+   });
 })
  
 //functions
-
 function ignoreFavicon(req, res, next) {
    if (req.originalUrl && req.originalUrl.split("/").pop() === 'favicon.ico') {
        return res.sendStatus(204);
@@ -54,10 +60,9 @@ function ignoreFavicon(req, res, next) {
    return next();
 }
 
+
 //server
-
 const port = process.env.PORT || 3030;
-
 server.listen(port, err => {
-    console.log(err || "listening on port: " + port);
+   console.log(err || "listening on port " + port);
 });

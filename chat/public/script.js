@@ -6,7 +6,8 @@ const messageInput = document.getElementById('message-input')
 if (messageForm != null) {
   const name = prompt('What is your name?')
   appendMessage('You joined')
-  socket.emit('new-user', roomId, name)
+  // socket.emit('new-user', roomId, name)
+  socket.emit('join-room', roomId, name)
 
   //trigger whenever send in the chat button clicked
   messageForm.addEventListener('submit', e => {
