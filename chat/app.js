@@ -23,9 +23,9 @@ global.num_users = {};
 
 //ALL NEW
 io.on('connection', socket => {
-   console.log('connected');
+   // console.log('connected');
    socket.on('join-room', (room, name) => {
-      console.log('joined');
+      // console.log(name + ' joined to room id: '+ room);
       // console.log(roomId+" "+ userId);
       if(!(room in global.num_users)){
          global.num_users[room] = 1;
@@ -36,18 +36,18 @@ io.on('connection', socket => {
       socket.join(room);
       socket.to(room).broadcast.emit('user-connected', name);
 
-      socket.on('send-chat-message', (room, message) => {
+      socket.on('send-chat-message', message => {
+         console.log(message);
          socket.to(room).broadcast.emit('chat-message', { message: message, name: name });
+      });
 
-         //  LEFT ---------------------------------------------
-         socket.on('disconnect', () => {
-            global.num_users[room]--;
-            if(global.num_users[room] == 0){
-               delete global.num_users[room];
-            }
-            socket.to(room).broadcast.emit('user-disconnected', name);
-         });
-      })   
+      socket.on('disconnect', () => {
+         global.num_users[room]--;
+         if(global.num_users[room] == 0){
+            delete global.num_users[room];
+         }
+         socket.to(room).broadcast.emit('user-disconnected', name);
+      });
    });
 })
  

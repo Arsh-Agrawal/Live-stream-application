@@ -9,12 +9,12 @@ router.get('/', (req, res) => {
  });
 
  
- router.get("/:roomId", (req, res) => {
+ router.get("/:room", (req, res) => {
  
     //check if the room exists
-    let num_users = global.num_users;
-    let roomId = req.params.room;
-
+   let num_users = global.num_users;
+   let roomId = req.params.room;
+   
    if( (roomId in num_users) ){
       return res.render('room', { roomId: roomId, userCreatedRoom: '0'})
    }
