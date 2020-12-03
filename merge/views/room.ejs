@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Streaming</title>
-    <link rel="stylesheet" href="/stylesheets/room.css">
+    <link rel="stylesheet" href="public/stylesheets/room.css">
     <script>
       const ROOM_ID = "<%= roomId %>"
       const TRAINER = "<%= userCreatedRoom %>"
@@ -12,6 +12,57 @@
     <script defer src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
     <script src="http://localhost:3000/socket.io/socket.io.js" defer></script>
     <script src="http://localhost:3030/socket.io/socket.io.js" defer></script>
+    <style>
+      body {
+         height: 100%;
+         overflow-y: hidden;
+         margin-top: 25px;
+      }
+     
+     .stream_body{
+         display: flex;
+         justify-content: baseline;
+         top: 0;
+         bottom: 0;
+         left: 0;
+         height: 700px;
+     }
+     
+     .video-grid{
+         margin-left: 10px;
+         flex: 0.8;
+         border: 1px solid red;
+         height: 700px;
+         padding: 5px;
+     }
+     
+     .chat_body{
+         width: 100%;
+         flex: 0.2;
+         border: 1px solid red;
+         margin-right: 10px;
+         padding: 5px;
+         height: 700px;
+         display: flex;
+         margin: 0px
+     }
+     
+     .message-container{
+         overflow: scroll;
+         height: 84vh;
+         width: 20vw;
+         margin: 0px;
+         box-sizing: border-box;
+     }
+     .message-container > div{
+         list-style-type: none;
+     }
+     
+     input{
+         width: 19vw;
+         height: 3vh;
+     }
+    </style>
 </head>
 <body>
    <div class = "stream_body">
@@ -20,14 +71,15 @@
       </div>
       <div class="chat_body">
          <form id="send-container">
-            <!-- message container is the main message are -->
-            <input type="text" id="message-input">
+            <input type="text" id="message-input" placeholder="press enter to send">
             <button type="submit" id="send-button">Send</button>
-         </form>
+            <div id="message-container">
+               the message
+            </div>
+          </form>
       </div>
    </div>
    <script src="/scripts/stream.js" defer></script>
    <script src="/scripts/chat.js" defer></script>
 </body>
-
 </html>
