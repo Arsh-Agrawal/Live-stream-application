@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Streaming</title>
-    <link rel="stylesheet" href="public/stylesheets/room.css">
+    <link rel="stylesheet" href="/stylesheets/room.css">
     <script>
       const ROOM_ID = "<%= roomId %>"
       const TRAINER = "<%= userCreatedRoom %>"
@@ -66,15 +66,15 @@
 </head>
 <body>
    <div class = "stream_body">
-      <div class="video-grid">
-         video will go here
+      <div id="video-grid">
+         <!-- video will go here -->
       </div>
       <div class="chat_body">
          <form id="send-container">
             <input type="text" id="message-input" placeholder="press enter to send">
             <button type="submit" id="send-button">Send</button>
             <div id="message-container">
-               the message
+               <!-- the message -->
             </div>
           </form>
       </div>

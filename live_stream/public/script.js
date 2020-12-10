@@ -7,7 +7,7 @@ const myPeer = new Peer(undefined, {
   host: '/',
   port: '3001'
 })
-
+ 
 
 //user is the new user and my refers to yourself
 
@@ -19,13 +19,13 @@ console.log('trainer = ' + TRAINER);
 
 if (TRAINER == "1") {
   console.log('in trainer');
-  const myVideo = document.createElement('video')
-  myVideo.muted = true
+  const videoGrid = document.createElement('video')
+  videoGrid.muted = true
   navigator.mediaDevices.getUserMedia({
     video: true,
     audio: true
   }).then(stream => {
-    addVideoStream(myVideo, stream)
+    addVideoStream(videoGrid, stream)
 
 
     socket.on('user-connected', userId => {

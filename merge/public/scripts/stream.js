@@ -8,7 +8,6 @@ const myPeer = new Peer(undefined, {
   port: '3001'
 })
 
-
 //user is the new user and my refers to yourself
 
 //not to access everyones cam only the ones who joined
@@ -71,9 +70,11 @@ function addVideoStream(video, stream) {
 }
 
 function acceptStream(video) {
+  // console.log(video);
   myPeer.on('call', call => {
     call.answer();
     call.on('stream',stream =>{
+      console.log("here");
       addVideoStream(video, stream);
     })
   })
