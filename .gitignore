@@ -3,3 +3,6 @@ node_modules/
 
 #ignore files related to API keys
 .env
+
+#ignore other enviornmental files
+.DS_Store

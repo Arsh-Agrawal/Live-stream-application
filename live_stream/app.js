@@ -32,8 +32,9 @@ global.num_users = {};
 io.on('connection', socket => {
     console.log('connected');
     socket.on('join-room', (roomId, userId) => {
-        console.log('joined');
-        // console.log(roomId+" "+ userId);
+        
+        console.log(userId+  " joined");
+
         if(!(roomId in global.num_users)){
             global.num_users[roomId] = 1;
         }

@@ -9,7 +9,6 @@ const server = require('http').Server(app);
 const { v4: uuidv4 } = require('uuid');
 const bodyParser = require('body-parser');
 
-require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 app.use(ignoreFavicon);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -24,10 +23,13 @@ app.use(express.urlencoded({ extended: true }))
 app.get('/', (req, res) => {
     
     let roomId = uuidv4();
+    
+    //need to convert it to query
     return res.redirect(`/${roomId}`);
- });
+});
 
- app.get('/:room',(req,res) => {
+//needs to be converted to query
+app.get('/:room',(req,res) => {
     let roomId = req.params.room;
     // console.log(req.headers);
 
@@ -52,12 +54,11 @@ app.get('/', (req, res) => {
 
 });
 
- const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4000;
 
 server.listen(port, err => {
     console.log(err || "listening on port " + port);
 });
-
 
 
 function ignoreFavicon(req, res, next) {

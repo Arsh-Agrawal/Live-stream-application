@@ -1,7 +1,7 @@
 // const url = 'localhost:3000/'+ROOM_ID;
 // console.log(url);
 
-const socket = io('localhost:3000');
+const stream_socket = io('localhost:3000');
 const videoGrid = document.getElementById('video-grid')
 const myPeer = new Peer(undefined, {
   host: '/',
@@ -25,8 +25,7 @@ if (TRAINER == "1") {
   }).then(stream => {
     addVideoStream(myVideo, stream)
 
-
-    socket.on('user-connected', userId => {
+    stream_socket.on('user-connected', userId => {
       sendTrainerStream(userId, stream)
     })
   }).catch(err =>{
@@ -42,15 +41,15 @@ else {
 }
 
 
-socket.on('user-disconnected', userId => {
+stream_socket.on('user-disconnected', userId => {
   if (peers[userId]) {
     peers[userId].close();
     delete peers[userId];
   }
 })
 
-myPeer.on('open', id => {
-  socket.emit('join-room', ROOM_ID, id)
+myPeer.on('open', userId => {
+  stream_socket.emit('join-room', ROOM_ID, userId)
 })
 
 

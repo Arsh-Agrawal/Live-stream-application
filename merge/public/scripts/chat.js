@@ -1,4 +1,4 @@
-const socket2 = io('localhost:3030')
+const chat_socket = io('localhost:3030')
 const messageContainer = document.getElementById('message-container')
 const messageForm = document.getElementById('send-container')
 const messageInput = document.getElementById('message-input')
@@ -7,14 +7,14 @@ if (messageForm != null) {
   const name = prompt('What is your name?')
   appendMessage('You joined')
   // socket.emit('new-user', roomId, name)
-  socket2.emit('join-room', ROOM_ID, name)
+  chat_socket.emit('join-room', ROOM_ID, name)
 
   //trigger whenever send in the chat button clicked
   messageForm.addEventListener('submit', e => {
     e.preventDefault()
     const message = messageInput.value
     appendMessage(`You: ${message}`)
-    socket2.emit('send-chat-message', message);
+    chat_socket.emit('send-chat-message', message);
     messageInput.value = '';
   })
 }
