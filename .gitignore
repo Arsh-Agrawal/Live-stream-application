@@ -1,8 +1,9 @@
-#ignore modules folder
+# Program module files #
 node_modules/
 
-#ignore files related to API keys
+# Enviormental files #
 .env
 
-#ignore other enviornmental files
+# OS generated files #
 .DS_Store
+.DS_Store?
